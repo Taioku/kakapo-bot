@@ -5,8 +5,7 @@ import os
 intents = discord.Intents.default()
 intents.members = True
 
-token = "MTAzMjg1NDkwMTQ1OTUyNTY3Mg.Gq3m1v.Q6iDBf_9iJBaFgXV92ZeZNHkgVmwJQ3zAXmH2U"
-#token = os.environ["DISCORD_TOKEN"]
+token = os.environ["DISCORD_TOKEN"]
 
 kakapo = commands.Bot(command_prefix = "k!", intents=intents)
 
