@@ -72,6 +72,7 @@ class Alarm(commands.Cog):
             if rn < 59:
                 await asyncio.sleep(1)
         else:
+            await asyncio.sleep(0.5)
             await self.time_check.start()
             print("Time check started")
 
