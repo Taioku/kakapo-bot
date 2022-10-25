@@ -117,5 +117,5 @@ class Alarm(commands.Cog):
         await ctx.channel.purge(limit=1)
         pass
 
-def setup(kakapo):
-    kakapo.add_cog(Alarm(kakapo))
+async def setup(kakapo):
+    await kakapo.add_cog(Alarm(kakapo))
