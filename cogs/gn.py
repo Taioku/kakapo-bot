@@ -3,9 +3,8 @@ import discord
 import sqlite3
 import asyncio
 import os.path
-import datetime
+from datetime import datetime
 import re
-from discord.utils import get
 
 class Alarm(commands.Cog):
     def __init__(self, kakapo):

@@ -10,7 +10,7 @@ token = "MTAzMjg1NDkwMTQ1OTUyNTY3Mg.GHAYwB.FWSbN95Mm6H8Xr5W21js_MzI-8G_IKick24Uw
 
 kakapo = commands.Bot(command_prefix = "k!", intents=intents)
 
-extensions = ["cogs.gn"]
+extensions = ["cogs.gn", "cogs.sv_conf"]
 
 @kakapo.event
 async def on_ready():
