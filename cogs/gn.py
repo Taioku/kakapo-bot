@@ -1,4 +1,3 @@
-from unittest import result
 from discord.ext import commands, tasks
 import discord
 import sqlite3
@@ -6,13 +5,14 @@ import asyncio
 import os.path
 import datetime
 import re
+from discord.utils import get
 
 class Alarm(commands.Cog):
     def __init__(self, kakapo):
         self.kakapo = kakapo
 
     @tasks.loop(minutes=1)
-    async def time_check():
+    async def time_check(self, ctx: commands.Context):
         rn = re.sub('[^0-9]', '', str(datetime.datetime.now().time()))
         time = str(rn[:4])
         print("")
@@ -22,35 +22,40 @@ class Alarm(commands.Cog):
         with sqlite3.connect(db_path) as db:
             cursor = db.cursor()
             cursor.execute(f"SELECT hour FROM alarm")
-            # result = cursor.fetchall
-            # print(result)
-            for row in cursor:
-                hour = re.sub('[^0-9]', '', str(row))
-                print("Saved hour: " + hour)
-                print("Step 1")
-                if time == hour:
-                    cursor.execute(f"SELECT guild_id FROM alarm WHERE hour = {hour}")
-                    result1 = cursor.fetchall()
-                    print("Guild Id: " + str(result1))
-                    for guild_id in cursor:
-                        cursor.execute(f"SELECT channel_id FROM alarm WHERE guild_id = {guild_id}")
-                        result2 = cursor.fetchall
-                        print("Channel Id: " + str(result2))
-                        print("Step 2")
-                        for channel_id in cursor:
-                            print("Step 3")
-                            await channel_id.send("hi")
-                else:
-                    pass
+            hour_result = cursor.fetchall()
+            for hour_row in hour_result:
+                hour = re.sub('[^0-9]', '', str(hour_row))
+
+                #if time == hour:
+                cursor.execute(f"SELECT guild_id FROM alarm WHERE hour = {hour}")
+                guild_id_result = cursor.fetchall()
+                for guild_id_row in guild_id_result:
+                    guild_id = re.sub('[^0-9]', '', str(guild_id_row))
+
+                    cursor.execute(f"SELECT channel_id FROM alarm WHERE guild_id = {guild_id}")
+                    channel_id_result = cursor.fetchall()
+                    for channel_id_row in channel_id_result:
+                        channel_id = re.sub('[^0-9]', '', str(channel_id_row))
+
+                        cursor.execute(f"SELECT message FROM alarm WHERE channel_id = {channel_id}")
+                        message = cursor.fetchone()
+                        print("")
+                        print(message[0])
+                        print(channel_id)
+                        print(guild_id)
+                        print("Exit")
+
+                        channel = self.kakapo.get_channel(int(channel_id))
+                        await channel.send(message[0])
+                #else:
+                #    pass
         db.commit()
         cursor.close()
         db.close()
-    
-    time_check.start()
 
-    @commands.command(name="test")
-    async def test_command(self, ctx):
-        pass
+    @commands.command(name="start")
+    async def start_clock(self, ctx):
+        self.time_check.start(ctx)
 
     @commands.group(name="alarm")
     async def alarm(self, ctx):
