@@ -66,10 +66,11 @@ async def reload(ctx, extension):
         pass
 
 if __name__ == "__main__":
-    for extension in extensions:
-        try:
-            kakapo.load_extension(extension)
-        except Exception as error:
-            print("{} cannot be loaded. [{}]".format(extension, error))
+    async def load_extensions():
+        for extension in extensions:
+            try:
+                await kakapo.load_extension(extension)
+            except Exception as error:
+                print("{} cannot be loaded. [{}]".format(extension, error))
 
 kakapo.run(token)
