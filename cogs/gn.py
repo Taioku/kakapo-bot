@@ -69,13 +69,11 @@ class Alarm(commands.Cog):
             rn = int(rn[4:6])
             print("")
             print(rn)
-            if rn < 59:
-                await asyncio.sleep(1)
-        else:
-            await asyncio.sleep(0.5)
-            await self.time_check.start()
-            print("Time check started")
-
+            await asyncio.sleep(1)
+            if rn == 59:
+                await self.time_check.start()
+                print("Time check started")
+                
     @commands.group(name="alarm")
     async def alarm(self, ctx):
         pass
