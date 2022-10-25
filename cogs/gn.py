@@ -21,7 +21,7 @@ class Alarm(commands.Cog):
         db_path = os.path.join(BASE_DIR, "kakapo_database.db")
         with sqlite3.connect(db_path) as db:
             cursor = db.cursor()
-            cursor.execute(f"SELECT hour FROM alarm")
+            cursor.execute(f"SELECT DISTINCT hour FROM alarm")
             hour_result = cursor.fetchall()
             for hour_row in hour_result:
                 hour = hour_row[0]
@@ -29,9 +29,10 @@ class Alarm(commands.Cog):
 
                 #if time == hour:
                 cursor.execute(f"SELECT channel_id FROM alarm WHERE hour = '{hour}'")
-                channel_id_result = cursor.fetchall()
+                channel_id_result = [row[0] for row in cursor.fetchall()]
+                print(f"Hour: {hour_row[0]}, Channels:{channel_id_result}")
                 for channel_id_row in channel_id_result:
-                    channel_id = channel_id_row[0]
+                    channel_id = channel_id_row
                     print(channel_id)
 
                     cursor.execute(f"SELECT message FROM alarm WHERE channel_id = '{channel_id}'")
