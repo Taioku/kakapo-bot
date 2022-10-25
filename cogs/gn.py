@@ -24,31 +24,21 @@ class Alarm(commands.Cog):
             cursor.execute(f"SELECT hour FROM alarm")
             hour_result = cursor.fetchall()
             for hour_row in hour_result:
-                hour = re.sub('[^0-9]', '', str(hour_row))
+                hour = hour_row[0]
+                print(hour)
 
                 #if time == hour:
-                cursor.execute(f"SELECT guild_id FROM alarm WHERE hour = {hour}")
-                guild_id_result = cursor.fetchall()
-                for guild_id_row in guild_id_result:
-                    guild_id = re.sub('[^0-9]', '', str(guild_id_row))
+                cursor.execute(f"SELECT channel_id FROM alarm WHERE hour = '{hour}'")
+                channel_id_result = cursor.fetchall()
+                for channel_id_row in channel_id_result:
+                    channel_id = channel_id_row[0]
+                    print(channel_id)
 
-                    cursor.execute(f"SELECT channel_id FROM alarm WHERE guild_id = {guild_id}")
-                    channel_id_result = cursor.fetchall()
-                    for channel_id_row in channel_id_result:
-                        channel_id = re.sub('[^0-9]', '', str(channel_id_row))
+                    cursor.execute(f"SELECT message FROM alarm WHERE channel_id = '{channel_id}'")
+                    message = cursor.fetchone()
 
-                        cursor.execute(f"SELECT message FROM alarm WHERE channel_id = {channel_id}")
-                        message = cursor.fetchone()
-                        print("")
-                        print(message[0])
-                        print(channel_id)
-                        print(guild_id)
-                        print("Exit")
-
-                        channel = self.kakapo.get_channel(int(channel_id))
-                        await channel.send(message[0])
-                #else:
-                #    pass
+                    channel = self.kakapo.get_channel(int(channel_id))
+                    await channel.send(message[0])
         db.commit()
         cursor.close()
         db.close()

@@ -5,7 +5,8 @@ import os
 intents = discord.Intents.default()
 intents.members = True
 
-token = os.environ["DISCORD_TOKEN"]
+#token = os.environ["DISCORD_TOKEN"]
+token = "MTAzMjg1NDkwMTQ1OTUyNTY3Mg.GHAYwB.FWSbN95Mm6H8Xr5W21js_MzI-8G_IKick24Uw4"
 
 kakapo = commands.Bot(command_prefix = "k!", intents=intents)
 
@@ -16,7 +17,6 @@ async def on_ready():
     await kakapo.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name="k!help"))
     print(kakapo.user.name, "has woke up!")
     print("User id:", kakapo.user.id)
-    await start_clock()
 
 @kakapo.command()
 async def load(ctx, extension):
