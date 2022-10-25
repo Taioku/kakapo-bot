@@ -22,7 +22,7 @@ async def load(ctx, extension):
     if ctx.message.author.id == 272429170363990016:
         try:
             cogs = "cogs."
-            kakapo.load_extension(cogs + extension)
+            await kakapo.load_extension(cogs + extension)
             print("Loaded {}".format(extension))
             print('')
             await ctx.send("Loaded {}!".format(extension))
@@ -38,7 +38,7 @@ async def unload(ctx, extension):
     if ctx.message.author.id == 272429170363990016:
         try:
             cogs = "cogs."
-            kakapo.unload_extension(cogs + extension)
+            await kakapo.unload_extension(cogs + extension)
             print("Unloaded {}".format(extension))
             print('')
             await ctx.send("Unloaded {}!".format(extension))
@@ -54,7 +54,7 @@ async def reload(ctx, extension):
     if ctx.message.author.id == 272429170363990016:
         try:
             cogs = "cogs."
-            kakapo.reload_extension(cogs + extension)
+            await kakapo.reload_extension(cogs + extension)
             print("Reloaded {}".format(extension))
             print('')
             await ctx.send("Reloaded {}!".format( extension))
