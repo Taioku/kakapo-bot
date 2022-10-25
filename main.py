@@ -2,7 +2,7 @@ from discord.ext import commands
 import discord
 import os
 
-intents = discord.Intents.default()
+intents = discord.Intents.all()
 intents.members = True
 
 token = os.environ["DISCORD_TOKEN"]
