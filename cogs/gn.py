@@ -1,52 +1,46 @@
-from doctest import REPORTING_FLAGS
-from unittest import result
-from discord.ext import commands, tasks
+from discord.ext import commands
 import discord
 import sqlite3
 import asyncio
 import os.path
 import datetime
-
-from pyparsing import restOfLine
-
-badchars = {32: 0, 40: 0, 41: 0, 44: 0, 58: 0}
+import re
 
 class Alarm(commands.Cog):
     def __init__(self, kakapo):
         self.kakapo = kakapo
-        
-    guild_id = "666417376627261451"
-
-
-
-    @tasks.loop(minutes=1)
-    async def tsk_loop(): 
-        rn = str(datetime.datetime.now().time()).strip(":") 
-        time = str(rn[:5])
-        time = time.translate(badchars)
-        print("")
-        print("")
-        print(time)
-        BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-        db_path = os.path.join(BASE_DIR, "kakapo_database.db")
-        with sqlite3.connect(db_path) as db:
-            cursor = db.cursor()
-            cursor.execute(f"SELECT hour FROM alarm")
-            # result = cursor.fetchall
-            # print(result)
-            for row in cursor:
-                hour = str(row).translate(badchars)
-                print(row)
-                if time == 0:
-                    pass
-                else:
-                    pass
-        db.commit()
-        cursor.close()
-        db.close()
-                
-
-    tsk_loop.start()
+    
+    async def time_check():
+        while True:
+            rn = re.sub('[^0-9]', '', str(datetime.datetime.now().time()))
+            time = str(rn[:4])
+            print("")
+            print("Actual time: " + time)
+            BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+            db_path = os.path.join(BASE_DIR, "kakapo_database.db")
+            with sqlite3.connect(db_path) as db:
+                cursor = db.cursor()
+                cursor.execute(f"SELECT hour FROM alarm")
+                # result = cursor.fetchall
+                # print(result)
+                for row in cursor:
+                    hour = re.sub('[^0-9]', '', str(row))
+                    print("Saved hour: " + hour)
+                    if time == hour:
+                        cursor.execute(f"SELECT guild_id FROM alarm WHERE hour = {hour}")
+                        result = cursor.fetchall
+                        for row in cursor:
+                            cursor.execute(f"SELECT channel_id FROM alarm WHERE guild_id = {result}")
+                    else:
+                        pass
+            db.commit()
+            cursor.close()
+            db.close()
+            await asyncio.sleep(60)
+    
+    @commands.command(name="test")
+    async def test_command(self, ctx):
+        pass
 
     @commands.group(name="alarm")
     async def alarm(self, ctx):
@@ -54,6 +48,8 @@ class Alarm(commands.Cog):
 
     @alarm.command(name="set")
     async def alarm_set(self, ctx, channel:discord.TextChannel, message="", hour=""):
+        hour = re.sub('[^0-9]', '', hour)
+
         BASE_DIR = os.path.dirname(os.path.abspath(__file__))
         db_path = os.path.join(BASE_DIR, "kakapo_database.db")
         with sqlite3.connect(db_path) as db:
