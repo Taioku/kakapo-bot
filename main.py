@@ -9,7 +9,7 @@ token = os.environ["DISCORD_TOKEN"]
 
 kakapo = commands.Bot(command_prefix = "k!", intents=intents)
 
-extensions = ["cogs.gn", "cogs.sv_conf"]
+extensions = ["cogs.gn"]
 
 @kakapo.event
 async def on_ready():
