@@ -1,2 +1,1 @@
-pip==22.3
-setuptools==63.2.0
+discord.py==2.0.1
