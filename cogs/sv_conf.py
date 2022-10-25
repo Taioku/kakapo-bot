@@ -6,6 +6,5 @@ class Config(commands.Cog):
         self.kakapo = kakapo
 
 
-
 def setup(kakapo):
     kakapo.add_cog(Config(kakapo))
