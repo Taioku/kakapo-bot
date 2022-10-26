@@ -1,4 +1,5 @@
 from discord.ext import commands
+import asyncio
 import discord
 import os
 
@@ -66,11 +67,12 @@ async def reload(ctx, extension):
         pass
 
 if __name__ == "__main__":
-    async def load_extensions():
+    async def load_extension():
         for extension in extensions:
             try:
                 await kakapo.load_extension(extension)
             except Exception as error:
                 print("{} cannot be loaded. [{}]".format(extension, error))
 
+asyncio.run(load_extension)
 kakapo.run(token)
